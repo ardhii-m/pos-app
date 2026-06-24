@@ -1,15 +1,22 @@
 import { useState } from "react";
-import useInput from "../hooks/useInput.js";
+import useInput from "../../hooks/useInput.js";
 
 function LoginForm({ onLogin }) {
   const [username, onUsernameChange] = useInput("");
   const [password, onPasswordChange] = useInput("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit =  (e) => {
     e.preventDefault();
     if (username === "admin" && password === "admin") {
-      onLogin();
+      setLoading(true);
+      onLogin("admin");
+      setLoading(false);
+    } else if (username === "cashier" && password === "cashier") {
+      setLoading(true);
+      onLogin("cashier");
+      setLoading(false);
     } else {
       setError("Invalid username or password");
     }
@@ -40,9 +47,10 @@ function LoginForm({ onLogin }) {
       />
       <button
         type="submit"
-        className="bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition font-semibold"
+        disabled={loading}
+        className="bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition font-semibold disabled:opacity-50"
       >
-        Login
+        {loading ? 'Logging in...' : 'Login'}
       </button>
     </form>
   );
